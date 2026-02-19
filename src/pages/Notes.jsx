@@ -46,8 +46,8 @@ const Notes = () => {
           </svg>
         </h1>
         <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2">
-          {notes.map((elm, idx)=>{
-            return <NoteCard title={elm.title} description={elm.description} tag={elm.tag}  />
+          {notes?.map((elm, idx)=>{
+            return <NoteCard title={elm?.title} description={elm?.description} tag={elm?.tag}  />
           })}
         </div>
       </div>
