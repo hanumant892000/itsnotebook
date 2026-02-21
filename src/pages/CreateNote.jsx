@@ -16,12 +16,17 @@ const CreateNote = () => {
     e.preventDefault();
     const tag = tags.map((elm) => elm.value);
     console.log({ title, description, isPrivate, tag: tag });
-    const isAdded = await createNotes({
-      title,
-      description,
-      isPrivate,
-      tag: tag,
-    });
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("isPrivate", isPrivate);
+    formData.append("tag", tag);
+    if (image) {
+      formData.append("image", image, image.name);
+    }
+
+    const isAdded = await createNotes(formData);
 
     if (isAdded) {
       setTitle("");

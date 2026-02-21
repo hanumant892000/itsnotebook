@@ -1,17 +1,23 @@
 const express = require("express");
 const NotesModel = require("../schema/note.model");
 const AuthVerify = require("../middleware/authverify.middleware");
+const upload = require("../middleware/multer");
+const uploadOnCloudinary = require("../utils/cloudinary");
 const router = express.Router();
 
-router.post("/create", AuthVerify, async (req, res) => {
+router.post("/create", AuthVerify, upload.single("image"), async (req, res) => {
   const { title, description, tag, isPrivate } = req.body;
-
+  const localpath = req.file.path
   try {
+
+   const image = await uploadOnCloudinary(localpath)
+
     const note = await NotesModel.create({
       title,
       description,
       tag,
       isPrivate,
+      image,
       createdBy: req.user,
     });
 

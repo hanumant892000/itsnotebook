@@ -3,12 +3,16 @@ import { useNoteState } from "../contextapi/NoteState";
 import { useEffect } from "react";
 import NoteCard from "./../components/NoteCard";
 
-const Notes = () => {
-  const { getYourNote, notes } = useNoteState();
+const Notes = ({ category="private" }) => {
+  const { getYourNote, getPublicNote, notes } = useNoteState();
 
   useEffect(() => {
-    getYourNote();
-  }, []);
+    if (category=="private") {
+      getYourNote();
+    } else {
+      getPublicNote();
+    }
+  }, [category]);
 
   return (
     <>
@@ -20,16 +24,25 @@ const Notes = () => {
             - safe and secure{" "}
           </strong>
         </h1>
-        <Link
-          to="/createnote"
-          className="px-6 py-3 text-lg font-semibold rounded dark:bg-rose-600 dark:text-gray-50"
-        >
-          Create Notes
-        </Link>
+        <div className="flex justify-center items-center gap-5">
+          <Link
+            to="/createnote"
+            className="px-6 py-3 text-lg font-semibold rounded dark:bg-rose-600 dark:text-gray-50"
+          >
+            Create Notes
+          </Link>
+          <Link
+            to="/yournotes"
+            className="px-6 py-3 text-lg font-semibold rounded dark:bg-rose-600 dark:text-gray-50"
+          >
+            Your Notes
+          </Link>
+        </div>
       </div>
       <div className="px-6 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
         <h1 className="text-3xl pb-10 font-bold leading-none max-md:text-xl">
-          Your <span className="text-rose-500">Notes</span>
+          {category=="private" ? "Your" : "Public"}{" "}
+          <span className="text-rose-500">Notes</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -45,11 +58,29 @@ const Notes = () => {
             />
           </svg>
         </h1>
-        <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2">
-          {notes?.map((elm, idx)=>{
-            return <NoteCard title={elm?.title} description={elm?.description} tag={elm?.tag}  />
-          })}
-        </div>
+        {notes?.length > 0 ? (
+          <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2">
+            {notes?.map((elm, idx) => {
+              return (
+                <NoteCard
+                  title={elm?.title}
+                  description={elm?.description}
+                  tag={elm?.tag}
+                  isPrivate={elm?.isPrivate}
+                  updatedAt={elm?.updatedAt}
+                  image={elm?.image}
+                  userId={elm?.createdBy?._id}
+                  category={category}
+                  noteId={elm?._id}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div>
+            <h1 className="text-center my-10">No Notes Available</h1>
+          </div>
+        )}
       </div>
     </>
   );

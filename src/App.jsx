@@ -31,7 +31,8 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/notes" element={<Notes />} />
+        <Route path="/notes" element={<Notes category="public" />} />
+        <Route path="/yournotes" element={<Notes />} />
         <Route
           path="/createnote"
           element={
